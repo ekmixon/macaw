@@ -46,8 +46,7 @@ class ConvQA(CIS):
         """
         self.logger.info(conv_list)
         dispatcher_output = self.request_dispatcher.dispatch(conv_list)
-        output_msg = self.output_selection.get_output(conv_list, dispatcher_output)
-        return output_msg
+        return self.output_selection.get_output(conv_list, dispatcher_output)
 
     def run(self):
         """
@@ -97,7 +96,14 @@ if __name__ == '__main__':
                   'corenlp_path': 'PATH_TO_STANFORD_CORE_NLP_DIRECTORY',  # The path to the corenlp toolkit.
                   'qa_results_requested': 3}  # The number of candidate answers returned by the MRC model.
 
-    params = {**basic_params, **db_params, **interface_params, **retrieval_params, **mrc_params}
+    params = (
+        basic_params
+        | db_params
+        | interface_params
+        | retrieval_params
+        | mrc_params
+    )
+
     basic_params['logger'].info(params)
     ConvQA(params).run()
 

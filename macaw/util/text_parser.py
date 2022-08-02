@@ -18,11 +18,10 @@ class XmlListConfig(list):
             if element:
                 if len(element) == 1 or element[0].tag != element[1].tag:
                     self.append(XmlDictConfig(element))
-                elif element[0].tag == element[1].tag:
+                else:
                     self.append(XmlListConfig(element))
             elif element.text:
-                text = element.text.strip()
-                if text:
+                if text := element.text.strip():
                     self.append(text)
 
 
@@ -98,8 +97,10 @@ def html_to_clean_text(html):
         A str containing the clean content of the web page.
     """
     paragraphs = justext.justext(html, justext.get_stoplist("English"))
-    clean_text_list = []
-    for paragraph in paragraphs:
-        if not paragraph.is_boilerplate:
-            clean_text_list.append(paragraph.text)
+    clean_text_list = [
+        paragraph.text
+        for paragraph in paragraphs
+        if not paragraph.is_boilerplate
+    ]
+
     return '\n'.join(clean_text_list)

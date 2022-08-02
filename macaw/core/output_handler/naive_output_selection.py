@@ -37,18 +37,24 @@ class NaiveOutputProcessing(OutputProcessing):
         """
         if '#get_doc' in candidate_outputs:
             return '#get_doc'
-        if 'qa' in candidate_outputs:
-            if len(candidate_outputs['qa'][0].text) > 0:
-                if conv_list[0].text.endswith('?') \
-                        or conv_list[0].text.lower().startswith('what') \
-                        or conv_list[0].text.lower().startswith('who') \
-                        or conv_list[0].text.lower().startswith('when') \
-                        or conv_list[0].text.lower().startswith('where') \
-                        or conv_list[0].text.lower().startswith('how'):
-                    return 'qa'
-        if 'retrieval' in candidate_outputs:
-            if len(candidate_outputs['retrieval']) > 0:
-                return 'retrieval'
+        if (
+            'qa' in candidate_outputs
+            and len(candidate_outputs['qa'][0].text) > 0
+            and (
+                conv_list[0].text.endswith('?')
+                or conv_list[0].text.lower().startswith('what')
+                or conv_list[0].text.lower().startswith('who')
+                or conv_list[0].text.lower().startswith('when')
+                or conv_list[0].text.lower().startswith('where')
+                or conv_list[0].text.lower().startswith('how')
+            )
+        ):
+            return 'qa'
+        if (
+            'retrieval' in candidate_outputs
+            and len(candidate_outputs['retrieval']) > 0
+        ):
+            return 'retrieval'
         return None
 
     def get_output(self, conv, candidate_outputs):
@@ -67,9 +73,7 @@ class NaiveOutputProcessing(OutputProcessing):
         """
         user_id = conv[0].user_id
         user_info = conv[0].user_info
-        msg_info = dict()
-        msg_info['msg_id'] = conv[0].msg_info['msg_id']
-        msg_info['msg_source'] = 'system'
+        msg_info = {'msg_id': conv[0].msg_info['msg_id'], 'msg_source': 'system'}
         text = ''
         user_interface = conv[0].user_interface
 
@@ -86,7 +90,11 @@ class NaiveOutputProcessing(OutputProcessing):
             msg_info['msg_type'] = 'options'
             msg_info['msg_creator'] = 'retrieval'
             text = 'Retrieved document list (click to see the document content):'
-            msg_info['options'] = [(output.title, '#get_doc ' + output.id, output.score) for output in candidate_outputs['retrieval']]
+            msg_info['options'] = [
+                (output.title, f'#get_doc {output.id}', output.score)
+                for output in candidate_outputs['retrieval']
+            ]
+
         elif selected_action == '#get_doc':
             msg_info['msg_type'] = 'text'
             msg_info['msg_creator'] = '#get_doc'

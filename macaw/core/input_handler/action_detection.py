@@ -34,16 +34,16 @@ class PreActionRequestDispatcher:
 
         """
         if conv_list[0].msg_info['msg_type'] == 'command':
-            command = conv_list[0].text.split(' ')[0]
-            return command
+            return conv_list[0].text.split(' ')[0]
 
-        if 'qa' in self.params:
-            if conv_list[0].text.lower().startswith('what') \
-                    or conv_list[0].text.lower().startswith('who') \
-                    or conv_list[0].text.lower().startswith('when') \
-                    or conv_list[0].text.lower().startswith('where') \
-                    or conv_list[0].text.lower().startswith('how'):
-                return 'qa'
+        if 'qa' in self.params and (
+            conv_list[0].text.lower().startswith('what')
+            or conv_list[0].text.lower().startswith('who')
+            or conv_list[0].text.lower().startswith('when')
+            or conv_list[0].text.lower().startswith('where')
+            or conv_list[0].text.lower().startswith('how')
+        ):
+            return 'qa'
         if 'retrieval' in self.params:
             return 'retrieval'
 
@@ -106,11 +106,11 @@ class RequestDispatcher:
         for p in action_processes:
             p.join()
 
-        candidate_outputs = dict()
-        for key in action_results:
-            if action_results[key]:
-                candidate_outputs[key] = action_results[key]
-        return candidate_outputs
+        return {
+            key: action_results[key]
+            for key in action_results
+            if action_results[key]
+        }
 
     def execute_command(self, conv_list, command):
         """

@@ -88,7 +88,7 @@ class TelegramBot(Interface):
             update.message.voice.get_file().download(ogg_file.name)
             text = self.params['asr'].speech_to_text(ogg_file.name)
             ogg_file.close()
-            update.message.reply_text('Macaw heard: ' + text)
+            update.message.reply_text(f'Macaw heard: {text}')
 
             user_info = {'first_name': update.message.chat.first_name,
                          'last_name': update.message.chat.last_name,

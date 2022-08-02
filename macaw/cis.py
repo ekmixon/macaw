@@ -50,10 +50,12 @@ class CIS(ABC):
             return output_msg
 
         except FunctionTimedOut:
-            msg_info = dict()
-            msg_info['msg_id'] = msg.msg_info['msg_id']
-            msg_info['msg_source'] = 'system'
-            msg_info['msg_type'] = 'error'
+            msg_info = {
+                'msg_id': msg.msg_info['msg_id'],
+                'msg_source': 'system',
+                'msg_type': 'error',
+            }
+
             text = 'Time out, no result!'
             timestamp = util.current_time_in_milliseconds()
             error_msg = Message(msg.user_interface, msg.user_id, msg.user_info, msg_info, text, timestamp)

@@ -39,7 +39,7 @@ def get_recursive_content_as_str(doc):
         for t in doc:
             text += get_recursive_content_as_str(t)
     else:
-        raise Exception('cannot parse document recursively, ' + str(type(doc)))
+        raise Exception(f'cannot parse document recursively, {str(type(doc))}')
     return text
 
 
@@ -73,11 +73,11 @@ def get_trec_doc(trec_doc, format='trectext'):
         raise Exception('Undefined TREC document format. Supported document formats are trectext and trecweb')
     text = re.sub('\s+', ' ', text).strip()  # removing multiple consecutive whitespaces
 
-    # Removing other tags in the text, e.g., <p>.
-    clean_text_list = []
     paragraphs = justext.justext(text, justext.get_stoplist("English"))
-    for paragraph in paragraphs:
-        if not paragraph.is_boilerplate:
-            clean_text_list.append(paragraph.text)
+    clean_text_list = [
+        paragraph.text
+        for paragraph in paragraphs
+        if not paragraph.is_boilerplate
+    ]
 
     return Document(id, title, '\n'.join(clean_text_list), 0.)

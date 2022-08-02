@@ -188,8 +188,14 @@ if __name__ == '__main__':
     # retrieval_params, the retrieval model automatically calls the re-ranking method. For more details, see the method
     # 'get_results' in class core.retrieval.search_engine.Retrieval.
 
-    seeker_params = {**basic_params, **db_params, **seeker_interface_params, **retrieval_params}
-    wizard_params = {**basic_params, **db_params, **wizard_interface_params, **retrieval_params}
+    seeker_params = (
+        basic_params | db_params | seeker_interface_params | retrieval_params
+    )
+
+    wizard_params = (
+        basic_params | db_params | wizard_interface_params | retrieval_params
+    )
+
     basic_params['logger'].info(seeker_params)
     basic_params['logger'].info(wizard_params)
 
@@ -204,6 +210,6 @@ if __name__ == '__main__':
     seeker_process.start()
     wizard_process.start()
 
-    basic_params['logger'].info('Seeker Process ID: {}'.format(seeker_process.pid))
-    basic_params['logger'].info('Wizard Process ID: {}'.format(wizard_process.pid))
+    basic_params['logger'].info(f'Seeker Process ID: {seeker_process.pid}')
+    basic_params['logger'].info(f'Wizard Process ID: {wizard_process.pid}')
 

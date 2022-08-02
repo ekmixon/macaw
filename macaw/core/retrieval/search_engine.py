@@ -42,7 +42,7 @@ class Retrieval(ABC):
 			A list of Documents retrieved by the search engine.
 		"""
 		query = self.query_generation.get_query(conv_list)
-		self.params['logger'].info('New query: ' + query)
+		self.params['logger'].info(f'New query: {query}')
 		result_list = self.retrieve(query)
 		if 'reranker' in self.params:
 			return self.params['reranker'].rerank(query, conv_list, result_list, self.params)

@@ -45,6 +45,4 @@ class NLPUtil:
             A json object containing all co-reference resolutions extracted from the input text.
         """
         props = {'annotators': 'coref', 'pipelineLanguage': 'en', 'ner.useSUTime': False}
-        result = json.loads(self.corenlp.annotate(text, properties=props))
-
-        return result
+        return json.loads(self.corenlp.annotate(text, properties=props))

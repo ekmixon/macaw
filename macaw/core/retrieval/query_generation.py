@@ -83,7 +83,7 @@ class SimpleQueryGeneration(QueryGeneration):
 
         """
         corenlp_coref_result = self.compute_corefs(conv_list)
-        q_coref = dict()
+        q_coref = {}
         last_index = len(corenlp_coref_result['sentences'])
         for key in corenlp_coref_result['corefs']:
             has_coref = False
@@ -116,14 +116,13 @@ class SimpleQueryGeneration(QueryGeneration):
         conv_history = []
         for msg in reversed(conv_list):
             if msg.msg_info['msg_source'] == 'user' and msg.msg_info['msg_type'] in ['text', 'voice']:
-                temp = msg.text if msg.text.endswith('?') else (msg.text + '?')
+                temp = msg.text if msg.text.endswith('?') else f'{msg.text}?'
                 conv_history.append(temp)
-            # elif msg.msg_info['msg_source'] == 'system' and msg.msg_info['msg_type'] == 'text' and len(msg.text.split()) < 30:
-            #     temp = msg.text + '.'
-            #     conv_history.append(temp)
-        if len(conv_history) == 0:
+                # elif msg.msg_info['msg_source'] == 'system' and msg.msg_info['msg_type'] == 'text' and len(msg.text.split()) < 30:
+                #     temp = msg.text + '.'
+                #     conv_history.append(temp)
+        if not conv_history:
             raise Exception('The query generation model cannot generate any query! There should be a problem')
-        coref_results = self.params['nlp_util'].get_coref(' '.join(conv_history))
-        return coref_results
+        return self.params['nlp_util'].get_coref(' '.join(conv_history))
 
 

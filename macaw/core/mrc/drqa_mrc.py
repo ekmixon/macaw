@@ -74,10 +74,7 @@ class DrQA(MRC):
         """
         q = conv_list[0].text
         predictions = self.predictor.predict(doc, q, None, self.params['qa_results_requested'])
-        results = []
-        for i, p in enumerate(predictions, 1):
-            results.append(Document(None, None, p[0], p[1]))
-        return results
+        return [Document(None, None, p[0], p[1]) for i, p in enumerate(predictions, 1)]
 
 
 
